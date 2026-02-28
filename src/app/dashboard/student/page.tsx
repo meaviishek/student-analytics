@@ -26,14 +26,15 @@ function Meter({ score }: { score: number }) {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center relative py-8">
-            <svg className="w-48 h-24 transform rotate-180" viewBox="0 0 100 50">
+        <div className="flex flex-col items-center justify-center relative py-6">
+            <svg className="w-48 h-auto overflow-visible" viewBox="0 0 100 55">
                 <path
                     d="M 10 50 A 40 40 0 0 1 90 50"
                     fill="none"
                     stroke="#e2e8f0"
                     strokeWidth="10"
                     strokeLinecap="round"
+                    className="dark:stroke-slate-800"
                 />
                 <path
                     d="M 10 50 A 40 40 0 0 1 90 50"
@@ -42,14 +43,14 @@ function Meter({ score }: { score: number }) {
                     strokeWidth="10"
                     strokeLinecap="round"
                     className={getScoreColor(score)}
-                    strokeDasharray="125"
-                    strokeDashoffset={125 - (125 * score) / 100}
+                    strokeDasharray="125.66"
+                    strokeDashoffset={125.66 - (125.66 * score) / 100}
                     style={{ transition: "stroke-dashoffset 1.5s ease-out" }}
                 />
             </svg>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/4 text-center mt-2">
-                <div className={`text-4xl font-bold tracking-tighter ${getScoreColor(score)}`}>{score}</div>
-                <div className="text-xs uppercase tracking-widest text-slate-400 font-semibold mt-1">Total Score</div>
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center">
+                <div className={`text-5xl font-bold tracking-tighter ${getScoreColor(score)} leading-none`}>{score}</div>
+                <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2">Total Score</div>
             </div>
         </div>
     );
@@ -119,24 +120,164 @@ function StudentDashboardContent() {
 
     const handleDownloadReport = async () => {
         setIsDownloading(true);
-        const element = document.getElementById("reportToDownload");
-        if (!element) return;
 
         try {
             // @ts-ignore
-            const html2pdf = (await import('html2pdf.js')).default;
+            const jsPDFModule = await import('jspdf');
+            const jsPDF = jsPDFModule.jsPDF || jsPDFModule.default || jsPDFModule;
+            const doc = new jsPDF('p', 'pt', 'a4');
 
-            const opt = {
-                margin: 0.5,
-                filename: `${profile?.name ? profile.name.replace(/\s+/g, '_') : 'Student'}_Assessment_Report.pdf`,
-                image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' as const }
-            };
+            const pageWidth = doc.internal.pageSize.getWidth();
 
-            html2pdf().set(opt).from(element).save().then(() => setIsDownloading(false));
+            // Background
+            doc.setFillColor(248, 250, 252);
+            doc.rect(0, 0, pageWidth, 842, 'F');
+
+            // Header Banner
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, pageWidth, 120, 'F');
+            doc.setDrawColor(226, 232, 240);
+            doc.line(0, 120, pageWidth, 120);
+
+            // Title
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(24);
+            doc.setTextColor(15, 23, 42);
+            doc.text(`${profile?.name ? profile.name + "'s" : 'Your'} Assessment Report`, 40, 60);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(12);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Domain: ${domain}`, 40, 85);
+
+            // Career Readiness Score Box
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(40, 150, (pageWidth - 100) / 2, 160, 8, 8, 'F');
+            doc.setDrawColor(226, 232, 240);
+            doc.roundedRect(40, 150, (pageWidth - 100) / 2, 160, 8, 8, 'S');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(15, 23, 42);
+            doc.text('Career Readiness Score', 60, 180);
+
+            doc.setFontSize(48);
+            if (score >= 80) doc.setTextColor(16, 185, 129); // emerald
+            else if (score >= 60) doc.setTextColor(59, 130, 246); // blue
+            else doc.setTextColor(245, 158, 11); // amber
+
+            doc.text(`${score}`, 110, 240);
+
+            doc.setFontSize(10);
+            doc.setTextColor(100, 116, 139);
+            doc.text('TOTAL SCORE / 100', 100, 260);
+
+            // Role Alignment Box
+            const rightBoxX = 40 + (pageWidth - 100) / 2 + 20;
+            doc.setFillColor(37, 99, 235); // primary blue
+            doc.roundedRect(rightBoxX, 150, (pageWidth - 100) / 2, 160, 8, 8, 'F');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255);
+            doc.text('Role Alignment', rightBoxX + 20, 180);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(226, 232, 240);
+            doc.text('Recommended starting positions:', rightBoxX + 20, 195);
+
+            roles.forEach((role: string, i: number) => {
+                doc.setFillColor(255, 255, 255);
+                doc.roundedRect(rightBoxX + 20, 210 + (i * 30), ((pageWidth - 100) / 2) - 40, 22, 4, 4, 'F');
+                doc.setTextColor(15, 23, 42);
+                doc.text(role, rightBoxX + 30, 225 + (i * 30));
+
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(16, 185, 129);
+                const matchPct = i === 0 ? '92%' : i === 1 ? '85%' : '78%';
+                doc.text(matchPct, rightBoxX + ((pageWidth - 100) / 2) - 50, 225 + (i * 30));
+                doc.setFont('helvetica', 'normal');
+            });
+
+            // Strengths
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(40, 340, pageWidth - 80, 140, 8, 8, 'F');
+            doc.setDrawColor(226, 232, 240);
+            doc.roundedRect(40, 340, pageWidth - 80, 140, 8, 8, 'S');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(15, 23, 42);
+            doc.text('Core Strengths', 60, 370);
+
+            const strengths = [
+                "Strong Team Orientation: Considers team impact before choices.",
+                "Clear Communication: Expresses ideas logically and effectively.",
+                "Structured Approach: Organizes complex tasks into milestones."
+            ];
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(71, 85, 105);
+            strengths.forEach((str, i) => {
+                doc.text(`• ${str}`, 60, 400 + (i * 25));
+            });
+
+            // Personality Breakdown
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(40, 510, pageWidth - 80, 160, 8, 8, 'F');
+            doc.setDrawColor(226, 232, 240);
+            doc.roundedRect(40, 510, pageWidth - 80, 160, 8, 8, 'S');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(15, 23, 42);
+            doc.text('Personality Breakdown', 60, 540);
+
+            const traits = [
+                { name: 'Communication', val: 88, desc: 'Expresses ideas clearly' },
+                { name: 'Decision-Making', val: 65, desc: 'Evaluates options carefully' },
+                { name: 'Adaptability', val: 75, desc: 'Adjusts to new processes' },
+                { name: 'Stress Tolerance', val: 70, desc: 'Maintains composure' }
+            ];
+
+            traits.forEach((trait, i) => {
+                const col = i % 2;
+                const row = Math.floor(i / 2);
+                const x = 60 + (col * ((pageWidth - 120) / 2));
+                const y = 570 + (row * 45);
+
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(10);
+                doc.setTextColor(15, 23, 42);
+                doc.text(trait.name, x, y);
+                doc.text(`${trait.val}%`, x + ((pageWidth - 160) / 2) - 20, y);
+
+                // Bar background
+                doc.setFillColor(241, 245, 249);
+                doc.rect(x, y + 5, ((pageWidth - 160) / 2), 6, 'F');
+
+                // Bar foreground
+                doc.setFillColor(37, 99, 235);
+                doc.rect(x, y + 5, (((pageWidth - 160) / 2) * trait.val) / 100, 6, 'F');
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor(100, 116, 139);
+                doc.text(trait.desc, x, y + 22);
+            });
+
+            // Footer
+            doc.setFontSize(10);
+            doc.setTextColor(148, 163, 184);
+            doc.text('Generated by Talentify Assessment Platform', 40, 800);
+
+            doc.save(`${profile?.name ? profile.name.replace(/\s+/g, '_') : 'Student'}_Assessment_Report.pdf`);
+
         } catch (error) {
             console.error("Failed to generate PDF", error);
+        } finally {
             setIsDownloading(false);
         }
     };

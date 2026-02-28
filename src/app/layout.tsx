@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
-  title: "Collabify Assessment Platform",
+  title: "Talentify Assessment Platform",
   description: "Domain-specific career assessment and readiness platform.",
 };
 
@@ -22,9 +22,9 @@ export default function RootLayout({
           <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xl">
-                C
+                T
               </div>
-              <span className="font-heading font-bold text-xl tracking-tight text-slate-900">Collabify</span>
+              <span className="font-heading font-bold text-xl tracking-tight text-slate-900">Talentify</span>
             </div>
             <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
               <a href="/#about" className="hover:text-blue-600 transition-colors">About</a>
@@ -41,9 +41,9 @@ export default function RootLayout({
         <footer className="border-t border-slate-200 bg-slate-50 py-12 text-slate-500">
           <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-heading font-semibold text-slate-900">Collabify</span>
+              <span className="font-heading font-semibold text-slate-900">Talentify</span>
             </div>
-            <p className="text-sm">© 2026 Collabify. All rights reserved.</p>
+            <p className="text-sm">© 2026 Talentify. All rights reserved.</p>
           </div>
         </footer>
       </body>

@@ -23,7 +23,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="mt-6 text-xl text-muted-foreground max-w-2xl font-medium leading-relaxed">
-            Take the Collabify assessment to discover your strengths, identify your ideal role, and accelerate your career readiness in Finance, HR, or Marketing.
+            Take the Talentify assessment to discover your strengths, identify your ideal role, and accelerate your career readiness in Finance, HR, or Marketing.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4">
@@ -121,7 +121,7 @@ export default function LandingPage() {
       <section className="py-20 bg-primary text-primary-foreground text-center">
         <div className="container mx-auto px-4 max-w-3xl">
           <p className="text-primary-foreground/80 font-medium mb-4 uppercase tracking-wider text-sm">Conducted By</p>
-          <h2 className="text-4xl font-bold font-heading mb-6">Collabify</h2>
+          <h2 className="text-4xl font-bold font-heading mb-6">Talentify</h2>
           <p className="text-xl text-primary-foreground/90 mb-10 leading-relaxed">
             Bridging the gap between academic capability and corporate reality. Helping students discover their true professional calling.
           </p>

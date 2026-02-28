@@ -206,8 +206,11 @@ function AssessmentContent() {
                         </div>
 
                         <h1 className="text-3xl font-bold font-heading text-foreground mb-4">
-                            {domain} Domain Assessment
+                            Psychometric Assessment & Talent Mapping Initiative
                         </h1>
+                        <h2 className="text-xl font-medium text-muted-foreground mb-4 text-center">
+                            {domain} Domain Assessment
+                        </h2>
 
                         <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8 text-left space-y-3">
                             <div className="flex gap-3">
