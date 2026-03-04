@@ -26,7 +26,7 @@ export default function LandingPage() {
             Take the Talentify assessment to discover your strengths, identify your ideal role, and accelerate your career readiness in Finance, HR, or Marketing.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 flex-wrap justify-center">
             <Link href="/register">
               <Button size="lg" variant="premium" className="group">
                 Register Now
@@ -36,6 +36,13 @@ export default function LandingPage() {
             <Button size="lg" variant="outline" className="bg-white hover:bg-slate-50 border-slate-200">
               View Assessment Details
             </Button>
+            <Link href="/company/payment">
+              <Button size="lg" variant="outline" className="group border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 hover:border-primary/50 transition-all">
+                <Building2 className="mr-2 h-5 w-5" />
+                Access Candidate Data
+                <ArrowRight className="ml-2 h-4 w-4 opacity-60 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
