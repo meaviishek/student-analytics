@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
-import { ArrowRight, CheckCircle2, TrendingUp, Users, Target } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingUp, Users, Target, Building2, Download, BarChart3, FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -112,6 +112,75 @@ export default function LandingPage() {
                 alt="Dashboard Preview"
                 className="relative z-10 rounded-2xl shadow-2xl border border-white/50 object-cover h-[400px] w-full"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* For Companies */}
+      <section id="companies" className="py-24 bg-background transition-colors border-t border-border">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div className="relative order-2 md:order-1">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-indigo-100 rounded-3xl transform -rotate-2" />
+              <div className="relative z-10 bg-card border border-border rounded-2xl shadow-2xl p-8 space-y-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Building2 className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-foreground text-sm">Company Access</p>
+                    <p className="text-xs text-muted-foreground">One-time unlock</p>
+                  </div>
+                  <div className="ml-auto text-right">
+                    <p className="text-2xl font-bold text-primary">₹5,999</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">one-time</p>
+                  </div>
+                </div>
+                {[
+                  { icon: Users, text: "Full access to all assessed student profiles" },
+                  { icon: BarChart3, text: "Domain-wise analytics & score breakdowns" },
+                  { icon: Download, text: "Download complete dataset as CSV/Excel" },
+                  { icon: FileSpreadsheet, text: "Role-alignment scores for smart shortlisting" },
+                ].map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <Icon className="h-4 w-4 text-emerald-600" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">{text}</p>
+                  </div>
+                ))}
+                <Link href="/company/payment" className="block">
+                  <Button variant="premium" size="lg" className="w-full mt-2 group">
+                    Unlock Candidate Data
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="order-1 md:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold mb-5">
+                <Building2 className="h-3.5 w-3.5" />
+                For Hiring Companies
+              </div>
+              <h2 className="text-3xl font-bold font-heading text-foreground mb-5">Find Pre-Assessed Talent, Instantly</h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Every student on Talentify has completed a rigorous domain assessment. Skip the initial screening — get access to validated candidates with detailed performance data, role-fit scores, and behavioral insights.
+              </p>
+              <div className="space-y-3">
+                {[
+                  "No more blind screening — every candidate is pre-assessed",
+                  "Filter by Finance, HR, or Marketing specialisation",
+                  "Download the full dataset for your ATS or spreadsheets",
+                  "One flat price — unlimited access to the entire pool",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <p className="text-muted-foreground text-sm">{item}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
